@@ -12,9 +12,27 @@ bench = "flock /tmp/mojo-bench.lock python bench/bench.py"
 
 [activation.env]
 PYTHONPATH = "python"
+PYTHONNOUSERSITE = "1"
+# Every kernel benchmarked here is scalar or 3x3, so no BLAS call in this
+# package is wide enough for BLAS threading to matter; OpenBLAS otherwise
+# claims one thread per core at import, which on a busy host is enough to
+# starve the compiler and the test runner of process ids.
+OPENBLAS_NUM_THREADS = "8"
+OMP_NUM_THREADS = "8"
 
 [dependencies]
-mojo = "==1.2.0.dev2026092605"
-python = "3.13.*"
+mojo = "==1.2.0.dev2026092905"
+max = "==26.7.0.dev2026092905"
+python = "3.12.*"
 pytest = "*"
-numpy = "*"
+numpy = "1.26.*"
+scipy = "*"
+
+# Upstream poliastro 0.17.0, installed whole. Only its numeric layer
+# (poliastro.core.*, poliastro._math.*) is used as the parity oracle; the
+# astropy-dependent wrappers in poliastro.twobody.* are outside the covered
+# subset and are not imported by the test suite.
+[pypi-dependencies]
+poliastro = "==0.17.0"
+numba = "*"
+astropy = "==5.3.4"

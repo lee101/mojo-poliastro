@@ -1,8 +1,11 @@
 .pixi/
 dist/
-build/*.o
 __pycache__/
-*.so
 *.pyc
+*.so
+*.dylib
+*.dll
+*.egg-info/
 .pytest_cache/
-.venv/
+build/lib/
+build/bdist.*/
